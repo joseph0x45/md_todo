@@ -35,4 +35,4 @@ They are welcome, just open a pull request :)
 - [] Select multiple tasks and toggle state
 
 ## Demo
-[![Demo](./final.mp4)]
+[![Demo](./final.mp4)](./final.mp4)
