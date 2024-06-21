@@ -1,20 +1,47 @@
 --- Simple plugin to manage tasks as todos in markdown files
 local md_todo = {}
 
+DUE_MODE = "due"
+DONE_MODE = "done"
+
+---@param str string
+---@param prefix string
+---@return boolean
+local function has_prefix(str, prefix)
+  return str:sub(1, #prefix) == prefix
+end
+
+---@param line string
+---@param mode string
+---@return boolean
+local function is_valid_line(line, mode)
+  if line:sub(1, 1) ~= '-' then
+    return false
+  end
+  if mode == DUE_MODE then
+    return has_prefix(line, "- [] ")
+  end
+  if mode == DONE_MODE then
+    return has_prefix(line, "- [x] ")
+  end
+  return true
+end
+
 ---Gets the content of the line where the cursor is at
 ---@return string
 local function get_current_line()
   local buffer_number = vim.api.nvim_get_current_buf()
   local row, _ = unpack(vim.api.nvim_win_get_cursor(0))
-  return vim.api.nvim_buf_get_lines(buffer_number, row-1, row, false)[1]
+  return vim.api.nvim_buf_get_lines(buffer_number, row - 1, row, false)[1]
+end
+
+---@param keys string
+---@param mode string
+local function feedkeys(keys, mode)
+  vim.api.nvim_feedkeys(vim.api.nvim_replace_termcodes(keys, true, true, true), mode, true)
 end
 
 local function disable_in_non_md_files()
-  extension = vim.api.nvimgebuffer
-end
-
-local function line_is_valid()
-  
 end
 
 function md_todo.create_todo()
@@ -22,10 +49,19 @@ end
 
 function md_todo.set_todo_done()
   local current_line = get_current_line()
-  print(current_line)
+  if not is_valid_line(current_line, DUE_MODE) then
+    print("Line is not a valid due task")
+    return
+  end
+  feedkeys("^/[<CR>ax<Esc>:w<CR>", "n")
 end
 
 function md_todo.set_todo_due()
+  local current_line = get_current_line()
+  if not is_valid_line(current_line, DONE_MODE) then
+    print("Line is not a valid done task")
+  end
+  feedkeys("^/x<CR>x<Esc>:w<CR>", "n")
 end
 
 return md_todo
