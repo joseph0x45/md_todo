@@ -42,23 +42,20 @@ local function feedkeys(keys, mode)
 end
 
 function md_todo.create_todo()
+  feedkeys("o", "n")
+  feedkeys("- [] ", "")
 end
 
-function md_todo.set_todo_done()
+function md_todo.toggle_state()
   local current_line = get_current_line()
-  if not is_valid_line(current_line, DUE_MODE) then
-    print("Line is not a valid due task")
+  if is_valid_line(current_line, DUE_MODE) then
+    feedkeys("^/[<CR>ax<Esc>:w<CR>", "n")
     return
   end
-  feedkeys("^/[<CR>ax<Esc>:w<CR>", "n")
-end
-
-function md_todo.set_todo_due()
-  local current_line = get_current_line()
-  if not is_valid_line(current_line, DONE_MODE) then
-    print("Line is not a valid done task")
-  end
+  if is_valid_line(current_line, DONE_MODE) then
   feedkeys("^/x<CR>x<Esc>:w<CR>", "n")
+    return
+  end
 end
 
 return md_todo
