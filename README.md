@@ -35,4 +35,4 @@ They are welcome, just open a pull request :)
 - [] Select multiple tasks and toggle state
 
 ## Demo
-[![Alt text](https://img.youtube.com/vi/VIDEO_ID/0.jpg)](https://youtu.be/FKfZ115CmFU)
+[Youtube video(less than 30 secs)](https://youtu.be/FKfZ115CmFU) 
