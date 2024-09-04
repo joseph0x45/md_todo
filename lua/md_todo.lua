@@ -19,7 +19,7 @@ local function is_valid_line(line, mode)
     return false
   end
   if mode == DUE_MODE then
-    return has_prefix(line, "- [] ")
+    return has_prefix(line, "- [ ] ")
   end
   if mode == DONE_MODE then
     return has_prefix(line, "- [x] ")
@@ -43,7 +43,7 @@ end
 
 function md_todo.create_todo()
   feedkeys("o", "n")
-  feedkeys("- [] ", "")
+  feedkeys("- [ ] ", "")
 end
 
 function md_todo.toggle_state()
