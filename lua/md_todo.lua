@@ -48,12 +48,22 @@ end
 
 function md_todo.toggle_state()
   local current_line = get_current_line()
+  local buffer_number = vim.api.nvim_get_current_buf()
+  local row, _ = unpack(vim.api.nvim_win_get_cursor(0))
+  
+  -- Check if the current line is a due task
   if is_valid_line(current_line, DUE_MODE) then
-    feedkeys("^/[<CR>ax<Esc>:w<CR>", "n")
+    -- Replace the '- [ ] ' prefix with '- [x] '
+    local new_line = current_line:gsub("- %[ %]", "- [x]")
+    vim.api.nvim_buf_set_lines(buffer_number, row - 1, row, false, {new_line})
     return
   end
+
+  -- Check if the current line is a done task
   if is_valid_line(current_line, DONE_MODE) then
-  feedkeys("^/x<CR>x<Esc>:w<CR>", "n")
+    -- Replace the '- [x] ' prefix with '- [ ] '
+    local new_line = current_line:gsub("- %[x%]", "- [ ]")
+    vim.api.nvim_buf_set_lines(buffer_number, row - 1, row, false, {new_line})
     return
   end
 end
